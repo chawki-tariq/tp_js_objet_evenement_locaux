@@ -1,9 +1,9 @@
+import mapboxgl from 'mapbox-gl'
+import { EventLikeType } from '../core/constants'
 import Map from '../core/Map'
-import { EventLikeType, FormFieldName } from '../core/constants'
-import LocalEvent from './Entity/LocalEvent'
 
 export default class Viewport {
-  map = {};
+  map = {}
 
   app = {}
 
@@ -11,32 +11,28 @@ export default class Viewport {
     this.app = app
     this.map = new Map({
       container: document.createElement('div'),
-      style: "https://demotiles.maplibre.org/style.json",
+      style: 'https://demotiles.maplibre.org/style.json',
       center: [2, 47],
       zoom: 4,
       clickTolerance: 10,
       doubleClickZoom: false,
-      dragRotate: false,
-    });
+      dragRotate: false
+    })
   }
 
   start() {
-    this.map.on('click', this.onMapClick.bind(this))
-    this.app.panel.form.element.addEventListener(EventLikeType.FORM_VALIDATE, this.onFormValidate.bind(this))
-    
+    document.addEventListener(
+      EventLikeType.STATE_CHANGE,
+      this.onStateChange.bind(this)
+    )
+
     this.#render()
   }
-  
-  onMapClick(e) {
-    const form = this.app.panel.form
-    form.element.elements.namedItem(FormFieldName.LAT).value = e.lngLat.lat
-    form.element.elements.namedItem(FormFieldName.LNG).value = e.lngLat.lng
-  }
 
-  onFormValidate({ detail }) {
-    console.log(detail)
-    // console.log(new LocalEvent(detail))
-    new LocalEvent(detail)
+  onStateChange({ detail }) {
+    const marker = new mapboxgl.Marker()
+      .setLngLat({ lng: detail.lng, lat: detail.lat })
+      .addTo(this.map)
   }
 
   #render() {

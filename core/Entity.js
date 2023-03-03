@@ -1,18 +1,27 @@
 export default class Entity {
   id = null
 
-  constructor(data) {
+  constructor() {
+    if (!this.id) {
+      this.id = crypto.randomUUID()
+    }
+  }
+
+  hydrate(data) {
     for (const property in data) {
       if (this.hasOwnProperty(property)) {
-        console.log(property, data[property])
         Object.defineProperty(this, property, {
           value: data[property]
         })
       }
     }
+  }
 
-    if (!this.id) {
-      this.id = crypto.randomUUID()
+  toJson() {
+    const json = {}
+    for (const property in this) {
+      json[property] = this[property]
     }
+    return json
   }
 }

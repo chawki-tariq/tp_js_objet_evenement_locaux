@@ -1,3 +1,9 @@
+export const StatusColor = Object.freeze({
+  GREEN: 'green',
+  ORANGE: 'orange',
+  RED: 'red'
+})
+
 export const FormFieldName = Object.freeze({
   TITLE: 'title',
   DESCRIPTION: 'description',

@@ -1,3 +1,4 @@
+import { FormFieldName } from "../core/constants"
 import Form from "./Form"
 
 export default class Panel {
@@ -6,7 +7,7 @@ export default class Panel {
   element = {}
 
   form = {}
-
+ 
   constructor(app) {
     this.app = app
     this.element = document.createElement('aside')
@@ -17,7 +18,14 @@ export default class Panel {
   start() {
     this.form.start()
 
+    this.app.viewport.map.on('click', this.onMapClick.bind(this))
+
     this.render()
+  }
+
+  onMapClick(e) {
+    this.form.element.elements.namedItem(FormFieldName.LAT).value = e.lngLat.lat
+    this.form.element.elements.namedItem(FormFieldName.LNG).value = e.lngLat.lng
   }
 
   render() {

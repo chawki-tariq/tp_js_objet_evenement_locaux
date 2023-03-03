@@ -1,7 +1,8 @@
 import Panel from './Panel'
 import Viewport from './Viewport'
 import PersistState from '../core/PersistState'
-import { PersistStateKey } from '../core/constants'
+import { PersistStateKey, EventLikeType } from '../core/constants'
+import LocalEvent from './Entity/LocalEvent'
 
 export default class App {
   viewport = {}
@@ -23,8 +24,22 @@ export default class App {
   start() {
     this.viewport.start()
     this.panel.start()
-    
+
+    console.log(this.localEventState.get())
+
+    this.panel.form.element.addEventListener(
+      EventLikeType.FORM_VALIDATE,
+      this.onFormValidate.bind(this)
+    )
+
     this.render()
+  }
+
+  onFormValidate({ detail }) {
+    this.localEventState.set([
+      new LocalEvent(detail),
+      ...this.localEventState.get()
+    ])
   }
 
   render() {

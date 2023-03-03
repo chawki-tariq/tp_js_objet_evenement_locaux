@@ -1,25 +1,15 @@
-import { EventLikeType } from './constants'
+import State from './State'
 import Storage from './Storage'
 
-export default class PersistState {
+export default class PersistState extends State {
   #key = null
 
-  constructor(key, initial = null) {
+  constructor(key) {
+    super()
     this.#key = key
-    if (initial) {
-      this.set(this.#key, initial)
-    }
   }
 
   set(state) {
-    document.dispatchEvent(
-      new CustomEvent(EventLikeType.STATE_CHANGE, {
-        detail: Storage.set(this.#key, state)
-      })
-    )
-  }
-
-  get() {
-    return Storage.get(this.#key)
+    super.set(Storage.set(this.#key, state))
   }
 }

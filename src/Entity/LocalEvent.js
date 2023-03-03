@@ -8,4 +8,9 @@ export default class LocalEvent extends Entity {
   lng = null
 
   lat = null
+
+  constructor(data) {
+    super()
+    this.hydrate(data)
+  }
 }
