@@ -21,7 +21,7 @@ export default class Form {
   onSubmit(e) {
     e.preventDefault()
     const data = new FormData(this.element)
-    
+
     this.feedback.clear()
 
     for (const [key, value] of data.entries()) {
