@@ -21,12 +21,28 @@ export default class Form {
   onSubmit(e) {
     e.preventDefault()
     const data = new FormData(this.element)
+    
     this.feedback.clear()
+
     for (const [key, value] of data.entries()) {
-      if (value) continue
       const field = this.element.elements.namedItem(key)
-      this.feedback.add('Ce champ est obligatoire', field)
+
+      // Si le champs est vide
+      if (!value) {
+        this.feedback.add('Ce champ est obligatoire', field)
+        continue
+      }
+
+      // Si les coordonée sont pas aux bon format
+      if (
+        (key === FormFieldName.LNG && !value.match(/^\d*\.\d+$/)) ||
+        (key === FormFieldName.LAT && !value.match(/^\d*\.\d+$/))
+      ) {
+        this.feedback.add('coordonnées géographiques incorrecte!', field)
+        continue
+      }
     }
+
     if (!this.feedback.getAll().length) {
       this.element.dispatchEvent(
         new CustomEvent(EventLikeType.FORM_VALIDATE, {

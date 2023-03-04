@@ -4,8 +4,8 @@ import Storage from './Storage'
 export default class PersistState extends State {
   #key = null
 
-  constructor(key) {
-    super()
+  constructor(key, inital = null) {
+    super(inital)
     this.#key = key
   }
 
@@ -13,7 +13,7 @@ export default class PersistState extends State {
     super.set(Storage.set(this.#key, state))
   }
 
-  get(defaultValue = null) {
-    return Storage.get(this.#key) ?? defaultValue
+  get() {
+    return Storage.get(this.#key) ?? super.get()
   }
 }

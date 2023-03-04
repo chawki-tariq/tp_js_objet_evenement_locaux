@@ -35,7 +35,7 @@ export default class Viewport {
   }
 
   onMapLoad() {
-    this.app.localEventState.set(this.app.localEventState.get([]))
+    this.app.localEventState.set(this.app.localEventState.get())
   }
 
   onStateChange({ detail }) {

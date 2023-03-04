@@ -3,7 +3,7 @@ import { EventLikeType } from './constants'
 export default class State {
   #state = null
 
-  constructor(initial) {
+  constructor(initial = null) {
     this.#state = initial
   }
 
@@ -14,7 +14,7 @@ export default class State {
     }))
   }
 
-  get(defaultValue = null) {
-    return this.#state ?? defaultValue
+  get() {
+    return this.#state
   }
 }

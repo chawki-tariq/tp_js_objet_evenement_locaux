@@ -18,7 +18,7 @@ export default class App {
     this.element.classList.add('app')
     this.viewport = new Viewport(this)
     this.panel = new Panel(this)
-    this.localEventState = new PersistState(PersistStateKey.LOCAL_EVENT)
+    this.localEventState = new PersistState(PersistStateKey.LOCAL_EVENT, [])
   }
 
   start() {
@@ -37,7 +37,7 @@ export default class App {
     const localEvent = new LocalEvent(detail)
     this.localEventState.set([
       localEvent.toJson(),
-      ...this.localEventState.get([])
+      ...this.localEventState.get()
     ])
   }
 
