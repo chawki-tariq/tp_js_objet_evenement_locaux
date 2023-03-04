@@ -1,29 +1,19 @@
-export default class Feedback {
-  #feedbacks = []
+import Removable from "./Removable"
 
+export default class Feedback extends Removable {
   #type = ''
 
   #className = ''
 
   constructor(options = {}) {
+    super()
     const { type = 'span', className = 'invalid' } = options
     this.#type = type
     this.#className = className
   }
 
   add(message, adjacentElement = null) {
-    this.#feedbacks.push(this.create(message, adjacentElement))
-  }
-
-  clear() {
-    for (const feedback of this.#feedbacks) {
-      feedback.remove()
-    }
-    this.#feedbacks = []
-  }
-
-  getAll() {
-    return this.#feedbacks
+    super.add(this.create(message, adjacentElement))
   }
 
   create(message, adjacentElement) {

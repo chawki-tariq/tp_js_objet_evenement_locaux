@@ -14,7 +14,7 @@ export default class State {
     }))
   }
 
-  get() {
-    return this.#state
+  get(defaultValue = null) {
+    return this.#state ?? defaultValue
   }
 }

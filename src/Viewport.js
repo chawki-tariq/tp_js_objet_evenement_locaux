@@ -1,14 +1,17 @@
-import mapboxgl from 'mapbox-gl'
 import { EventLikeType } from '../core/constants'
 import Map from '../core/Map'
+import Removable from '../core/Removable'
 
 export default class Viewport {
   map = {}
 
   app = {}
 
+  markers = {}
+
   constructor(app) {
     this.app = app
+    this.markers = new Removable()
     this.map = new Map({
       container: document.createElement('div'),
       style: 'https://demotiles.maplibre.org/style.json',
@@ -21,6 +24,8 @@ export default class Viewport {
   }
 
   start() {
+    this.map.on('load', this.onMapLoad.bind(this))
+
     document.addEventListener(
       EventLikeType.STATE_CHANGE,
       this.onStateChange.bind(this)
@@ -29,10 +34,15 @@ export default class Viewport {
     this.#render()
   }
 
+  onMapLoad() {
+    this.app.localEventState.set(this.app.localEventState.get([]))
+  }
+
   onStateChange({ detail }) {
-    const marker = new mapboxgl.Marker()
-      .setLngLat({ lng: detail.lng, lat: detail.lat })
-      .addTo(this.map)
+    this.markers.clear()
+    for (const data of detail) {
+      this.markers.add(this.map.newMarker({ lng: data.lng, lat: data.lat }))
+    }
   }
 
   #render() {

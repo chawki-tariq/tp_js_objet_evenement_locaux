@@ -12,4 +12,8 @@ export default class PersistState extends State {
   set(state) {
     super.set(Storage.set(this.#key, state))
   }
+
+  get(defaultValue = null) {
+    return Storage.get(this.#key) ?? defaultValue
+  }
 }

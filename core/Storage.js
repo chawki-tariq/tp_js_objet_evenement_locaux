@@ -4,7 +4,7 @@ export default class Storage {
     return value
   }
 
-  get(key) {
-    JSON.parse(localStorage.getItem(key))
+  static get(key) {
+    return JSON.parse(localStorage.getItem(key))
   }
 }

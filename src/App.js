@@ -25,8 +25,6 @@ export default class App {
     this.viewport.start()
     this.panel.start()
 
-    console.log(this.localEventState.get())
-
     this.panel.form.element.addEventListener(
       EventLikeType.FORM_VALIDATE,
       this.onFormValidate.bind(this)
@@ -36,9 +34,10 @@ export default class App {
   }
 
   onFormValidate({ detail }) {
+    const localEvent = new LocalEvent(detail)
     this.localEventState.set([
-      new LocalEvent(detail),
-      ...this.localEventState.get()
+      localEvent.toJson(),
+      ...this.localEventState.get([])
     ])
   }
 
