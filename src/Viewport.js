@@ -77,7 +77,7 @@ export default class Viewport {
         anchor: 'top',
         lng: localEvent.lng,
         lat: localEvent.lat,
-        color: localEvent.getStatusColor()
+        color: localEvent.getStatus().color
       })
       .setPopup(this.#newPopup(localEvent))
     marker.getElement().addEventListener('mouseenter', () => {
@@ -101,6 +101,9 @@ export default class Viewport {
 
   #getClickPopupHTML(localEvent) {
     return `
+<p style="color: ${localEvent.getStatus().color}">${
+      localEvent.getStatus().message
+    }</p>
 <h2>${localEvent.title}</h2>
 <p>${localEvent.description}</p>
 </p>${this.#getPopupDatetimeHTML(localEvent)}</p>
@@ -109,6 +112,9 @@ export default class Viewport {
 
   #getHoverPopupHTML(localEvent) {
     return `
+<p style="color: ${localEvent.getStatus().color}">${
+      localEvent.getStatus().message
+    }</p>
 <h2>${localEvent.title}</h2>
 </p>${this.#getPopupDatetimeHTML(localEvent)}</p>
 `

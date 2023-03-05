@@ -1,6 +1,5 @@
 import { LocalEventStatusColor } from '../../core/constants'
 import Entity from '../../core/Entity'
-import Helper from '../../core/Helper'
 
 const NOW = Date.now()
 
@@ -24,17 +23,28 @@ export default class LocalEvent extends Entity {
     this.end = new Date(this.end)
   }
 
-  getStatusColor() {
-    const start = Math.ceil((this.start.getTime() - NOW) / 1000 / 3600 / 24)
+  getStatus() {
+    const day = Math.ceil((this.start.getTime() - NOW) / 1000 / 3600 / 24)
 
-    if (start > 3) {
-      return LocalEventStatusColor.GREEN
+    if (day > 3) {
+      return {
+        color: LocalEventStatusColor.GREEN,
+        message: ''
+      }
     }
 
-    if (start > 0) {
-      return LocalEventStatusColor.ORANGE
+    if (day > 0) {
+      return {
+        color: LocalEventStatusColor.GREEN,
+        message: `Attention, commence dans ${start} jours et ${this.start.toLocaleTimeString(
+          process.env.LOCALE
+        )} heures`
+      }
     }
 
-    return LocalEventStatusColor.RED
+    return {
+      color: LocalEventStatusColor.RED,
+      message: 'Quel dommage! Vous avez raté cet événement!'
+    }
   }
 }
