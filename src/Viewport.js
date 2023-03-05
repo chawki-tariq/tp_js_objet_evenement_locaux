@@ -50,6 +50,7 @@ export default class Viewport {
   }
 
   #onMarkerMouseEnter(marker, data) {
+    if (marker.getPopup().isOpen()) return
     this.#popups.add(
       this.map
         .newPopup({
@@ -57,7 +58,7 @@ export default class Viewport {
           closeOnClick: false
         })
         .setLngLat(marker.getLngLat())
-        .setHTML(`<p>${data.title}</p>`)
+        .setHTML(`<h2>${data.title}</h2>`)
         .addTo(this.map)
     )
   }
@@ -67,11 +68,13 @@ export default class Viewport {
   }
 
   #newMarker(data) {
-    const marker = this.map.newMarker({
-      anchor: 'top',
-      lng: data.lng,
-      lat: data.lat
-    })
+    const marker = this.map
+      .newMarker({
+        anchor: 'top',
+        lng: data.lng,
+        lat: data.lat
+      })
+      .setPopup(this.#newPopup(data))
     marker.getElement().addEventListener('mouseenter', () => {
       this.#onMarkerMouseEnter(marker, data)
     })
@@ -79,6 +82,18 @@ export default class Viewport {
       this.#onMarkerMouseLeave()
     })
     return marker
+  }
+
+  #onPopupOpen(e) {
+    this.#popups.clear()
+  }
+
+  #newPopup(data) {
+    const popup = this.map
+      .newPopup()
+      .setHTML(`<h2>${data.title}</h2>` + `<p>${data.description}</p>`)
+      popup.on('open', this.#onPopupOpen.bind(this))
+    return popup
   }
 
   #render() {
