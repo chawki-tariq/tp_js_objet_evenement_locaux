@@ -62,7 +62,7 @@ export default class Viewport {
           maxWidth: '400px'
         })
         .setLngLat(marker.getLngLat())
-        .setHTML(this.#getHoverPopupHTML(localEvent))
+        .setHTML(this.#getPopupHTML(localEvent))
         .addTo(this.map)
     )
   }
@@ -94,41 +94,25 @@ export default class Viewport {
       .newPopup({
         maxWidth: '400px'
       })
-      .setHTML(this.#getClickPopupHTML(localEvent))
+      .setHTML(this.#getPopupHTML(localEvent, true))
     popup.on('open', () => this.#popups.clear())
     return popup
   }
 
-  #getClickPopupHTML(localEvent) {
+  #getPopupHTML(localEvent, description = false) {
+    const formatedStart = Helper.dateTimeFormat(localEvent.start)
+    const formatedEnd = Helper.dateTimeFormat(localEvent.end)
+    const color = localEvent.getStatus().color
+    const message = localEvent.getStatus().message
     return `
-<p style="color: ${localEvent.getStatus().color}">${
-      localEvent.getStatus().message
-    }</p>
 <h2>${localEvent.title}</h2>
-<p>${localEvent.description}</p>
-</p>${this.#getPopupDatetimeHTML(localEvent)}</p>
+<p style="color: ${color}">${message}</p>
+<p>${description ? localEvent.description : ''}</p>
+</p>
+  Du <time datatime="${localEvent.start}">${formatedStart}</time>
+  ou <time datatime="${localEvent.end}">${formatedEnd}</time>
+</p>
 `
-  }
-
-  #getHoverPopupHTML(localEvent) {
-    return `
-<p style="color: ${localEvent.getStatus().color}">${
-      localEvent.getStatus().message
-    }</p>
-<h2>${localEvent.title}</h2>
-</p>${this.#getPopupDatetimeHTML(localEvent)}</p>
-`
-  }
-
-  #getPopupDatetimeHTML(localEvent) {
-    return `
-    Du <time datatime="${localEvent.start}">${Helper.dateTimeFormat(
-      localEvent.start
-    )}</time>
-    ou <time datatime="${localEvent.end}">${Helper.dateTimeFormat(
-      localEvent.end
-    )}</time>
-    `
   }
 
   #render() {

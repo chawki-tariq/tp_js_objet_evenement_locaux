@@ -35,7 +35,7 @@ export default class LocalEvent extends Entity {
 
     if (day > 0) {
       return {
-        color: LocalEventStatusColor.GREEN,
+        color: LocalEventStatusColor.ORANGE,
         message: `Attention, commence dans ${start} jours et ${this.start.toLocaleTimeString(
           process.env.LOCALE
         )} heures`

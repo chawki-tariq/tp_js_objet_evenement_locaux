@@ -1,6 +1,6 @@
 export default class Helper {
   static #dateTimeFormat = new Intl.DateTimeFormat(process.env.LOCALE, {
-    dateStyle: 'short',
+    dateStyle: 'long',
     timeStyle: 'short'
   })
 
