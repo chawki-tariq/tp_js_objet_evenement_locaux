@@ -7,11 +7,11 @@ export default class Viewport {
 
   app = {}
 
-  markers = {}
+  #markers = {}
+
+  #popups = {}
 
   constructor(app) {
-    this.app = app
-    this.markers = new Removable()
     this.map = new Map({
       container: document.createElement('div'),
       style: 'https://demotiles.maplibre.org/style.json',
@@ -21,28 +21,64 @@ export default class Viewport {
       doubleClickZoom: false,
       dragRotate: false
     })
+    this.app = app
+    this.#markers = new Removable()
+    this.#popups = new Removable()
   }
 
   start() {
-    this.map.on('load', this.onMapLoad.bind(this))
+    this.map.on('load', this.#onMapLoad.bind(this))
 
     document.addEventListener(
       EventLikeType.STATE_CHANGE,
-      this.onStateChange.bind(this)
+      this.#onStateChange.bind(this)
     )
 
     this.#render()
   }
 
-  onMapLoad() {
+  #onMapLoad() {
     this.app.localEventState.set(this.app.localEventState.get())
   }
 
-  onStateChange({ detail }) {
-    this.markers.clear()
+  #onStateChange({ detail }) {
+    this.#markers.clear()
     for (const data of detail) {
-      this.markers.add(this.map.newMarker({ lng: data.lng, lat: data.lat }))
+      const marker = this.#newMarker(data)
+      this.#markers.add(marker)
     }
+  }
+
+  #onMarkerMouseEnter(marker, data) {
+    this.#popups.add(
+      this.map
+        .newPopup({
+          closeButton: false,
+          closeOnClick: false
+        })
+        .setLngLat(marker.getLngLat())
+        .setHTML(`<p>${data.title}</p>`)
+        .addTo(this.map)
+    )
+  }
+
+  #onMarkerMouseLeave() {
+    this.#popups.clear()
+  }
+
+  #newMarker(data) {
+    const marker = this.map.newMarker({
+      anchor: 'top',
+      lng: data.lng,
+      lat: data.lat
+    })
+    marker.getElement().addEventListener('mouseenter', () => {
+      this.#onMarkerMouseEnter(marker, data)
+    })
+    marker.getElement().addEventListener('mouseleave', () => {
+      this.#onMarkerMouseLeave()
+    })
+    return marker
   }
 
   #render() {
