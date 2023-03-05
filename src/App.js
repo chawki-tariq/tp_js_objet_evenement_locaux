@@ -3,11 +3,14 @@ import Viewport from './Viewport'
 import PersistState from '../core/PersistState'
 import { PersistStateKey, EventLikeType } from '../core/constants'
 import LocalEvent from './Entity/LocalEvent'
+import Outliner from './Outliner'
 
 export default class App {
   viewport = {}
 
   panel = {}
+
+  outliner = {}
 
   element = {}
 
@@ -18,6 +21,7 @@ export default class App {
     this.element.classList.add('app')
     this.viewport = new Viewport(this)
     this.panel = new Panel(this)
+    this.outliner = new Outliner(this)
     this.localEventState = new PersistState(PersistStateKey.LOCAL_EVENT, [])
   }
 
@@ -27,6 +31,7 @@ export default class App {
       this.onFormValidate.bind(this)
     )
 
+    this.outliner.start()
     this.viewport.start()
     this.panel.start()
 

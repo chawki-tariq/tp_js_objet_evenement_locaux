@@ -10,8 +10,6 @@ export default class Panel {
  
   constructor(app) {
     this.app = app
-    this.element = document.createElement('aside')
-    this.element.classList.add('panel')
     this.form = new Form()
   }
 
@@ -29,6 +27,8 @@ export default class Panel {
   }
 
   render() {
+    this.element = document.createElement('aside')
+    this.element.classList.add('panel')
     this.element.appendChild(this.form.element)
     this.app.element.appendChild(this.element)
   }
