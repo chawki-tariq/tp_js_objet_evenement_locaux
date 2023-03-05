@@ -5,6 +5,9 @@ textarea {
   border-radius: var(--radius);
   border-color: transparent;
   box-shadow: var(--shadow);
+  background-color: var(--secondary);
+  font: inherit;
+  color: inherit;
 }
 
 textarea {

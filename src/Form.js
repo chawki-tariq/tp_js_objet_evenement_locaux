@@ -80,6 +80,8 @@ export default class Form {
           detail: Object.fromEntries(data.entries())
         })
       )
+
+      this.element.reset()
     }
   }
 

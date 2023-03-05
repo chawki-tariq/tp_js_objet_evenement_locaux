@@ -16,6 +16,8 @@ export default class LocalEvent extends Entity {
 
   end = null
 
+  createdAt = new Date()
+
   constructor(data) {
     super()
     this.hydrate(data)

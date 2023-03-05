@@ -24,6 +24,7 @@ export default class Viewport {
       dragRotate: false
     })
     this.app = app
+    this.element = document.createElement('div')
     this.#markers = new Removable()
     this.#popups = new Removable()
   }
@@ -116,7 +117,6 @@ export default class Viewport {
   }
 
   #render() {
-    this.element = document.createElement('div')
     this.element.classList.add('viewport')
     this.element.appendChild(this.map.getContainer())
     this.app.element.appendChild(this.element)
