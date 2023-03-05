@@ -22,13 +22,13 @@ export default class App {
   }
 
   start() {
-    this.viewport.start()
-    this.panel.start()
-
     this.panel.form.element.addEventListener(
       EventLikeType.FORM_VALIDATE,
       this.onFormValidate.bind(this)
     )
+
+    this.viewport.start()
+    this.panel.start()
 
     this.render()
   }

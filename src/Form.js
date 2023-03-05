@@ -58,7 +58,7 @@ export default class Form {
     html += `<label>Titre</label>`
     html += `<input type="text" name="${FormFieldName.TITLE}" id="${FormFieldName.TITLE}">`
     html += `</p>`
-    html += `<div>`
+    html += `<div class="g2 gap1">`
     html += `<p>`
     html += `<label>Longitude</label>`
     html += `<input type="text" name="${FormFieldName.LNG}" id="${FormFieldName.LNG}">`
@@ -66,6 +66,16 @@ export default class Form {
     html += `<p>`
     html += `<label>Latitude</label>`
     html += `<input type="text" name="${FormFieldName.LAT}" id="${FormFieldName.LAT}">`
+    html += `</p>`
+    html += `</div>`
+    html += `<div class="g2 gap1">`
+    html += `<p>`
+    html += `<label>Début</label>`
+    html += `<input type="datetime-local" name="${FormFieldName.START_DATETIME}" id="${FormFieldName.START_DATETIME}">`
+    html += `</p>`
+    html += `<p>`
+    html += `<label>Fin</label>`
+    html += `<input type="datetime-local" name="${FormFieldName.END_DATETIME}" id="${FormFieldName.END_DATETIME}">`
     html += `</p>`
     html += `</div>`
     html += `<p>`

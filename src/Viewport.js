@@ -1,6 +1,8 @@
 import { EventLikeType } from '../core/constants'
+import Helper from '../core/Helper'
 import Map from '../core/Map'
 import Removable from '../core/Removable'
+import LocalEvent from './Entity/LocalEvent'
 
 export default class Viewport {
   map = {}
@@ -44,21 +46,23 @@ export default class Viewport {
   #onStateChange({ detail }) {
     this.#markers.clear()
     for (const data of detail) {
-      const marker = this.#newMarker(data)
+      const localEvent = new LocalEvent(data)
+      const marker = this.#newMarker(localEvent)
       this.#markers.add(marker)
     }
   }
 
-  #onMarkerMouseEnter(marker, data) {
+  #onMarkerMouseEnter(marker, localEvent) {
     if (marker.getPopup().isOpen()) return
     this.#popups.add(
       this.map
         .newPopup({
           closeButton: false,
-          closeOnClick: false
+          closeOnClick: false,
+          maxWidth: '400px'
         })
         .setLngLat(marker.getLngLat())
-        .setHTML(`<h2>${data.title}</h2>`)
+        .setHTML(this.#getHoverPopupHTML(localEvent))
         .addTo(this.map)
     )
   }
@@ -67,16 +71,17 @@ export default class Viewport {
     this.#popups.clear()
   }
 
-  #newMarker(data) {
+  #newMarker(localEvent) {
     const marker = this.map
       .newMarker({
         anchor: 'top',
-        lng: data.lng,
-        lat: data.lat
+        lng: localEvent.lng,
+        lat: localEvent.lat,
+        color: localEvent.getStatusColor()
       })
-      .setPopup(this.#newPopup(data))
+      .setPopup(this.#newPopup(localEvent))
     marker.getElement().addEventListener('mouseenter', () => {
-      this.#onMarkerMouseEnter(marker, data)
+      this.#onMarkerMouseEnter(marker, localEvent)
     })
     marker.getElement().addEventListener('mouseleave', () => {
       this.#onMarkerMouseLeave()
@@ -84,16 +89,40 @@ export default class Viewport {
     return marker
   }
 
-  #onPopupOpen(e) {
-    this.#popups.clear()
+  #newPopup(localEvent) {
+    const popup = this.map
+      .newPopup({
+        maxWidth: '400px'
+      })
+      .setHTML(this.#getClickPopupHTML(localEvent))
+    popup.on('open', () => this.#popups.clear())
+    return popup
   }
 
-  #newPopup(data) {
-    const popup = this.map
-      .newPopup()
-      .setHTML(`<h2>${data.title}</h2>` + `<p>${data.description}</p>`)
-      popup.on('open', this.#onPopupOpen.bind(this))
-    return popup
+  #getClickPopupHTML(localEvent) {
+    return `
+<h2>${localEvent.title}</h2>
+<p>${localEvent.description}</p>
+</p>${this.#getPopupDatetimeHTML(localEvent)}</p>
+`
+  }
+
+  #getHoverPopupHTML(localEvent) {
+    return `
+<h2>${localEvent.title}</h2>
+</p>${this.#getPopupDatetimeHTML(localEvent)}</p>
+`
+  }
+
+  #getPopupDatetimeHTML(localEvent) {
+    return `
+    Du <time datatime="${localEvent.start}">${Helper.dateTimeFormat(
+      localEvent.start
+    )}</time>
+    ou <time datatime="${localEvent.end}">${Helper.dateTimeFormat(
+      localEvent.end
+    )}</time>
+    `
   }
 
   #render() {
