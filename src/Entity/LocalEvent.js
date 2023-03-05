@@ -26,25 +26,23 @@ export default class LocalEvent extends Entity {
   getStatus() {
     const day = Math.ceil((this.start.getTime() - NOW) / 1000 / 3600 / 24)
 
-    if (day > 3) {
+    if (NOW >= this.end.getTime()) {
       return {
-        color: LocalEventStatusColor.GREEN,
-        message: ''
+        color: LocalEventStatusColor.RED,
+        message: 'Quel dommage! Vous avez raté cet événement!'
       }
     }
 
-    if (day > 0) {
+    if (day > 0 && day <= 3) {
       return {
         color: LocalEventStatusColor.ORANGE,
-        message: `Attention, commence dans ${start} jours et ${this.start.toLocaleTimeString(
-          process.env.LOCALE
-        )} heures`
+        message: `Attention, commence dans ${day} jours et ${this.start.getHours()} heures`
       }
     }
 
     return {
-      color: LocalEventStatusColor.RED,
-      message: 'Quel dommage! Vous avez raté cet événement!'
+      color: LocalEventStatusColor.GREEN,
+      message: ''
     }
   }
 }

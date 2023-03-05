@@ -11,6 +11,18 @@ textarea {
   resize: vertical;
 }
 
+form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space);
+}
+
+.form-group {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(var(--space) / 2);
+}
+
 .invalid-feedback {
   color: var(--danger);
 }

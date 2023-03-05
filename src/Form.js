@@ -29,23 +29,54 @@ export default class Form {
 
       // Si le champs est vide
       if (!value) {
-        this.feedback.add('Ce champ est obligatoire', field)
+        this.feedback.add('Ce champ est obligatoire!', field)
         continue
       }
 
-      // Si les coordonée sont pas aux bon format
+      // Si le titre est trop long
+      if (key === FormFieldName.TITLE && value.length > 100) {
+        this.feedback.add('Doit contenir maximum 100 caractères', field)
+        continue
+      }
+
+      // Si les coordonées sont incorrecte
       if (
-        (key === FormFieldName.LNG && !value.match(/^\d*\.\d+$/)) ||
-        (key === FormFieldName.LAT && !value.match(/^\d*\.\d+$/))
+        (key === FormFieldName.LNG && !value.match(/^-?\d*\.?\d+$/)) ||
+        (key === FormFieldName.LAT && !value.match(/^-?\d*\.?\d+$/))
       ) {
-        this.feedback.add('coordonnées géographiques incorrecte!', field)
+        this.feedback.add('Coordonnées géographiques incorrecte!', field)
+        continue
+      }
+
+      // Si la date de début est supérieur ou égale à la date de fin
+      if (
+        key === FormFieldName.START_DATETIME &&
+        value >= data.get(FormFieldName.END_DATETIME)
+      ) {
+        this.feedback.add(
+          'La date de début doit être inférieur à la date de fin!',
+          field
+        )
+        continue
+      }
+
+      // Si la date de début est dans le passé
+      if (
+        key === FormFieldName.START_DATETIME &&
+        new Date(value).getTime() < Date.now()
+      ) {
+        this.feedback.add(
+          'La date de début doit être supérieur au moment présent!',
+          field
+        )
         continue
       }
     }
 
+    // Si il n'y a eu aucune erreur
     if (!this.feedback.getAll().length) {
       this.element.dispatchEvent(
-        new CustomEvent(EventLikeType.FORM_VALIDATE, {
+        new CustomEvent(EventLikeType.FORM_VALIDATED, {
           detail: Object.fromEntries(data.entries())
         })
       )
@@ -53,36 +84,35 @@ export default class Form {
   }
 
   #render() {
-    let html = ``
-    html += `<p>`
-    html += `<label>Titre</label>`
-    html += `<input type="text" name="${FormFieldName.TITLE}" id="${FormFieldName.TITLE}">`
-    html += `</p>`
-    html += `<div class="g2 gap1">`
-    html += `<p>`
-    html += `<label>Longitude</label>`
-    html += `<input type="text" name="${FormFieldName.LNG}" id="${FormFieldName.LNG}">`
-    html += `</p>`
-    html += `<p>`
-    html += `<label>Latitude</label>`
-    html += `<input type="text" name="${FormFieldName.LAT}" id="${FormFieldName.LAT}">`
-    html += `</p>`
-    html += `</div>`
-    html += `<div class="g2 gap1">`
-    html += `<p>`
-    html += `<label>Début</label>`
-    html += `<input type="datetime-local" name="${FormFieldName.START_DATETIME}" id="${FormFieldName.START_DATETIME}">`
-    html += `</p>`
-    html += `<p>`
-    html += `<label>Fin</label>`
-    html += `<input type="datetime-local" name="${FormFieldName.END_DATETIME}" id="${FormFieldName.END_DATETIME}">`
-    html += `</p>`
-    html += `</div>`
-    html += `<p>`
-    html += `<label>Description</label>`
-    html += `<textarea name="${FormFieldName.DESCRIPTION}" id="${FormFieldName.DESCRIPTION}" cols="50" rows="10"></textarea>`
-    html += `</p>`
-    html += `<button class="btn btn-primary" type="submit">Enregister</button>`
-    this.element.innerHTML = html
+    this.element.innerHTML = `
+<p class="form-group">
+  <label for="${FormFieldName.TITLE}">Titre</label>
+  <input type="text" name="${FormFieldName.TITLE}" id="${FormFieldName.TITLE}">
+</p>
+<div class="g2 gap1">
+<p class="form-group">
+  <label for="${FormFieldName.LNG}">Longitude</label>
+  <input type="text" name="${FormFieldName.LNG}" id="${FormFieldName.LNG}">
+</p>
+<p class="form-group">
+  <label for="${FormFieldName.LAT}">Latitude</label>
+  <input type="text" name="${FormFieldName.LAT}" id="${FormFieldName.LAT}">
+</p>
+</div>
+<div class="g2 gap1">
+  <p class="form-group">
+  <label for="${FormFieldName.START_DATETIME}">Début</label>
+  <input type="datetime-local" name="${FormFieldName.START_DATETIME}" id="${FormFieldName.START_DATETIME}">
+  </p>
+  <p class="form-group">
+  <label for="${FormFieldName.END_DATETIME}">Fin</label>
+  <input type="datetime-local" name="${FormFieldName.END_DATETIME}" id="${FormFieldName.END_DATETIME}">
+  </p>
+</div>
+<p class="form-group">
+  <label for="${FormFieldName.DESCRIPTION}">Description</label>
+  <textarea name="${FormFieldName.DESCRIPTION}" id="${FormFieldName.DESCRIPTION}" cols="50" rows="10"></textarea>
+</p>
+<button class="btn btn-primary" type="submit">Enregister</button>`
   }
 }

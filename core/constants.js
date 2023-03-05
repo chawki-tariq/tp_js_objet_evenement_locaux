@@ -14,7 +14,7 @@ export const FormFieldName = Object.freeze({
 })
 
 export const EventLikeType = Object.freeze({
-  FORM_VALIDATE: 'form.validate',
+  FORM_VALIDATED: 'form.validate',
   STATE_CHANGE: 'state.change'
 })
 

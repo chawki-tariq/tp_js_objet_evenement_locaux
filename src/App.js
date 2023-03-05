@@ -23,7 +23,7 @@ export default class App {
 
   start() {
     this.panel.form.element.addEventListener(
-      EventLikeType.FORM_VALIDATE,
+      EventLikeType.FORM_VALIDATED,
       this.onFormValidate.bind(this)
     )
 
