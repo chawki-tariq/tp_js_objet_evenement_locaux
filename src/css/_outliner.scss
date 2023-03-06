@@ -20,9 +20,9 @@
   box-shadow: var(--shadow);
 }
 
-.outliner-item-title {
-  margin-bottom: 1em;
-  font-size: 1em;
+.outliner-item > *:not(:last-child) {
+  margin-bottom: calc(var(--space) / 2);
+  font-size: .9em;
 }
 
 .outliner-item-actions {

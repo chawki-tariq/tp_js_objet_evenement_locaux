@@ -75,6 +75,8 @@ export default class Outliner {
   }
 
   #newItem(localEvent) {
+    const color = localEvent.getStatus().color
+    const message = localEvent.getStatus().message
     const item = document.createElement('div')
     item.classList.add('outliner-item')
     let button =
@@ -85,10 +87,7 @@ export default class Outliner {
     }
     item.innerHTML = `
     <h2 class="outliner-item-title">${localEvent.title}</h2>
-    <p class="">${localEvent.createdAt.toLocaleString('fr-FR', {
-      dateStyle: 'long',
-      timeStyle: 'short'
-    })}</p>
+    <p style="color: ${color}">${message}</p>
     <div class="outliner-item-actions">
       ${button}
       <button class="btn btn-danger small" data-action="delete">Supprimer</button>

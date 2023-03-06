@@ -44,8 +44,20 @@ export default class App {
 
   onFormValidate({ detail }) {
     const localEvent = new LocalEvent(detail)
-    this.editable.set(() => ({}))
-    this.localEventState.set((state) => [localEvent.toJson(), ...state])
+    if (!Object.keys(this.editable.get()).length) {
+      this.localEventState.set((state) => [localEvent, ...state])
+    } else {
+      this.localEventState.set((state) =>
+      state.map((e) => {
+        if (e.id !== this.editable.get().id) return e
+          return {
+            ...e,
+            ...detail
+          }
+        })
+      )
+      this.editable.set(() => ({}))
+    }
   }
 
   render() {
