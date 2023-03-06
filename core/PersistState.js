@@ -9,8 +9,8 @@ export default class PersistState extends State {
     this.#key = key
   }
 
-  set(state) {
-    super.set(Storage.set(this.#key, state))
+  set(callback) {
+    super.set(() => Storage.set(this.#key, callback(this.get())))
   }
 
   get() {

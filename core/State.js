@@ -7,8 +7,8 @@ export default class State {
     this.#state = initial
   }
 
-  set(state) {
-    this.#state = state
+  set(callback) {
+    this.#state = callback(this.#state)
     document.dispatchEvent(new CustomEvent(EventLikeType.STATE_CHANGE, {
       detail: this.#state
     }))

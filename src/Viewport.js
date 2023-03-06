@@ -41,10 +41,11 @@ export default class Viewport {
   }
 
   #onMapLoad() {
-    this.app.localEventState.set(this.app.localEventState.get())
+    this.app.localEventState.set((state) => state)
   }
 
   #onStateChange({ detail }) {
+    if (!(detail instanceof Array)) return
     this.#markers.clear()
     for (const data of detail) {
       const localEvent = new LocalEvent(data)

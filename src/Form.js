@@ -8,7 +8,7 @@ export default class Form {
 
   constructor() {
     this.element = document.createElement('form')
-    this.element.setAttribute('validate', 'novalidate')
+    this.element.setAttribute('novalidate', 'true')
     this.feedback = new Feedback()
   }
 
@@ -94,11 +94,11 @@ export default class Form {
 <div class="g2 gap1">
 <p class="form-group">
   <label for="${FormFieldName.LNG}">Longitude</label>
-  <input type="text" name="${FormFieldName.LNG}" id="${FormFieldName.LNG}">
+  <input type="number" name="${FormFieldName.LNG}" id="${FormFieldName.LNG}">
 </p>
 <p class="form-group">
   <label for="${FormFieldName.LAT}">Latitude</label>
-  <input type="text" name="${FormFieldName.LAT}" id="${FormFieldName.LAT}">
+  <input type="number" name="${FormFieldName.LAT}" id="${FormFieldName.LAT}">
 </p>
 </div>
 <div class="g2 gap1">
@@ -115,6 +115,10 @@ export default class Form {
   <label for="${FormFieldName.DESCRIPTION}">Description</label>
   <textarea name="${FormFieldName.DESCRIPTION}" id="${FormFieldName.DESCRIPTION}" cols="50" rows="10"></textarea>
 </p>
-<button class="btn btn-primary" type="submit">Enregister</button>`
+<div class="g2 gap1">
+<button class="btn btn-primary" type="submit">Enregister</button>
+<button class="btn btn" type="reset" aria-hidden="true">Annuler</button>
+</div>
+`
   }
 }

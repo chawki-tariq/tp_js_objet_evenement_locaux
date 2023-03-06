@@ -4,6 +4,7 @@ import PersistState from '../core/PersistState'
 import { PersistStateKey, EventLikeType } from '../core/constants'
 import LocalEvent from './Entity/LocalEvent'
 import Outliner from './Outliner'
+import State from '../core/State'
 
 export default class App {
   viewport = {}
@@ -16,6 +17,8 @@ export default class App {
 
   localEventState = {}
 
+  editable = {}
+
   constructor() {
     this.element = document.createElement('main')
     this.element.classList.add('app')
@@ -23,6 +26,7 @@ export default class App {
     this.panel = new Panel(this)
     this.outliner = new Outliner(this)
     this.localEventState = new PersistState(PersistStateKey.LOCAL_EVENT, [])
+    this.editable = new State({})
   }
 
   start() {
@@ -40,10 +44,8 @@ export default class App {
 
   onFormValidate({ detail }) {
     const localEvent = new LocalEvent(detail)
-    this.localEventState.set([
-      localEvent.toJson(),
-      ...this.localEventState.get()
-    ])
+    this.editable.set(() => ({}))
+    this.localEventState.set((state) => [localEvent.toJson(), ...state])
   }
 
   render() {
