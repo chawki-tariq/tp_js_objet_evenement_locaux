@@ -1,7 +1,7 @@
 .mapboxgl-map {
   overflow: hidden;
-  height: 100%;
-  width: 100%;
+  min-height: 100%;
+  min-width: 100%;
   margin: auto;
   border-radius: var(--radius);
   color: var(--primary);

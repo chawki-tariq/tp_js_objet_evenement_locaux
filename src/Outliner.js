@@ -27,6 +27,13 @@ export default class Outliner {
   }
 
   #onStateChange() {
+    let title = `${this.app.localEventState.get().length} Evenement`
+    if (!this.app.localEventState.get().length) {
+      title = 'Aucun Evenement'
+    }
+    this.element.innerHTML = `
+      <h1>${title}</h1>
+    `
     const localEvents = this.app.localEventState
       .get()
       .sort((a, b) => a.createdAt < b.createdAt)

@@ -116,8 +116,8 @@ export default class Form {
   <textarea name="${FormFieldName.DESCRIPTION}" id="${FormFieldName.DESCRIPTION}" cols="50" rows="10"></textarea>
 </p>
 <div class="g2 gap1">
-<button class="btn btn-primary" type="submit">Enregister</button>
-<button class="btn btn" type="reset" aria-hidden="true">Annuler</button>
+  <button class="btn btn-primary" type="submit">Enregistrer</button>
+  <button class="btn btn" type="reset" aria-hidden="true">Annuler</button>
 </div>
 `
   }
