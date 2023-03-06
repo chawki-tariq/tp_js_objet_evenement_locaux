@@ -1,3 +1,6 @@
+/**
+ * Gère des elements supprimable
+ */
 export default class Removable {
   removables = []
 

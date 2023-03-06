@@ -26,8 +26,10 @@ export default class LocalEvent extends Entity {
 
   getStatus() {
     const now = Date.now()
+    // Différence entre maintenant et la date de début de l'évenement
     const day = Math.round((this.start.getTime() - now) / 1000 / 3600 / 24)
 
+    // Si les dates de l'évenement sont dans le passé
     if (now > this.start.getTime() && now >= this.end.getTime()) {
       return {
         color: LocalEventStatusColor.RED,
@@ -35,16 +37,15 @@ export default class LocalEvent extends Entity {
       }
     }
 
+    // Si la différence est entre aujourd-hui est dans 3 jours
     if (day >= 0 && day <= 3) {
       const hours = this.start.getHours()
-      let message = `Attention, commence ${Helper.relativeTimeFormat(day, 'day')}
-      ${Helper.relativeTimeFormat(hours, 'hour')}`
-      if (now >= this.start.getTime() && now < this.end.getTime()) {
-        message = 'Evenement en cours'
-      }
       return {
         color: LocalEventStatusColor.ORANGE,
-        message
+        message: `Attention, commence ${Helper.relativeTimeFormat(
+          day,
+          'day'
+        )} à ${hours}`
       }
     }
 

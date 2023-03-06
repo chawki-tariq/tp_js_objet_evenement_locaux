@@ -1,14 +1,13 @@
 import Removable from "./Removable"
 
+/**
+ * Réprésente des informations supprimable
+ */
 export default class Feedback extends Removable {
-  #type = ''
-
   #className = ''
 
-  constructor(options = {}) {
+  constructor(className = 'invalid') {
     super()
-    const { type = 'span', className = 'invalid' } = options
-    this.#type = type
     this.#className = className
   }
 
@@ -17,7 +16,7 @@ export default class Feedback extends Removable {
   }
 
   create(message, adjacentElement) {
-    const feedback = document.createElement(this.#type)
+    const feedback = document.createElement('span')
     feedback.classList.add(`${this.#className}-feedback`)
     feedback.innerText = message
     if (adjacentElement) {

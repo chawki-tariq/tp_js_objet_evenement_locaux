@@ -10,10 +10,15 @@ export default class PersistState extends State {
   }
 
   set(callback) {
-    super.set(() => Storage.set(this.#key, callback(this.get())))
+    // On modifie le storage avant l'état
+    const state = Storage.set(this.#key, callback(this.get()))
+    if (state) {
+      super.set(() => state)
+    }
   }
 
   get() {
+    // Renvoir la valeur du storage, sinon la valeur par défaut
     return Storage.get(this.#key) ?? super.get()
   }
 }

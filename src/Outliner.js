@@ -26,19 +26,24 @@ export default class Outliner {
 
   #onStateChange() {
     this.#beforeRender()
+    // Récupération des évenements qu'ont trie
+    // pour afficher les plus fatidique en premier
     const localEvents = this.app.localEventState
       .get()
       .sort(
-        (a, b) =>
+        (a) =>
           new LocalEvent(a).getStatus().color !== LocalEventStatusColor.ORANGE
       )
+      // Suppression des anciens items
     this.items.clear()
     const fragment = document.createDocumentFragment()
+    // Création d'un item pour chaque évenement
     for (const data of localEvents) {
       const localEvent = new LocalEvent(data)
       this.items.add(this.#newItem(localEvent))
-      fragment.append(...this.items.getAll())
     }
+    // On ajoute au fragment tout les item 
+    fragment.append(...this.items.getAll())
     this.element.appendChild(fragment)
   }
 
@@ -89,6 +94,12 @@ export default class Outliner {
     </div>
     `
     item.addEventListener('click', (e) => this.#onItemClick(e, localEvent))
+    item.addEventListener('mouseenter', (e) =>
+      this.app.viewport.newHoverPopup(localEvent)
+    )
+    item.addEventListener('mouseleave', (e) =>
+      this.app.viewport.onMarkerMouseLeave(localEvent)
+    )
     return item
   }
 
@@ -99,7 +110,6 @@ export default class Outliner {
     }
     this.element.innerHTML = `
       <h1>${title}</h1>
-      <button class="btn btn-danger">Tout supprimer</button>
     `
   }
 

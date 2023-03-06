@@ -19,7 +19,6 @@ export default class Viewport {
       style: 'https://demotiles.maplibre.org/style.json',
       center: [2, 47],
       zoom: 4,
-      clickTolerance: 10,
       doubleClickZoom: false,
       dragRotate: false
     })
@@ -41,9 +40,13 @@ export default class Viewport {
   }
 
   #onStateChange({ detail }) {
-    if (!(detail instanceof Array)) return
+    // Récupération des évenements depuis l'état
+    const localEvents = this.app.localEventState.get()
+    // On supprime les anciens markeurs
     this.#markers.clear()
-    for (const data of detail) {
+    // Création d'un nouveau markeur
+    // pour chaque évenement
+    for (const data of localEvents) {
       const localEvent = new LocalEvent(data)
       const marker = this.#newMarker(localEvent)
       this.#markers.add(marker)
@@ -51,11 +54,21 @@ export default class Viewport {
   }
 
   #onMarkerMouseEnter(marker, localEvent) {
+    // On met en surbrillance l'élement
+    // dans le outliner qui correspond
+    // ou markeur actuelle
     this.app.outliner.items
       .getAll()
       .find((item) => item.dataset.id === localEvent.id)
       .classList.add('active')
     if (marker.getPopup().isOpen()) return
+    // Création d'une popup lorsque
+    // le markeur est survolé
+    this.newHoverPopup(localEvent)
+  }
+
+  newHoverPopup(localEvent) {
+    // Création de la popup
     this.#popups.add(
       this.map
         .newPopup({
@@ -63,14 +76,17 @@ export default class Viewport {
           closeOnClick: false,
           maxWidth: '400px'
         })
-        .setLngLat(marker.getLngLat())
+        .setLngLat([localEvent.lng, localEvent.lat])
         .setHTML(this.#getPopupHTML(localEvent))
         .addTo(this.map)
     )
   }
 
-  #onMarkerMouseLeave(localEvent) {
+  onMarkerMouseLeave(localEvent) {
+    // On supprime toute les anciennes popups
     this.#popups.clear()
+    // On désactive la surbrillance de l'élement
+    // dans le outliner correspondant au markeur actuelle
     this.app.outliner.items
       .getAll()
       .find((item) => item.dataset.id === localEvent.id)
@@ -78,6 +94,7 @@ export default class Viewport {
   }
 
   #newMarker(localEvent) {
+    // Création du marker
     const marker = this.map
       .newMarker({
         anchor: 'top',
@@ -85,22 +102,28 @@ export default class Viewport {
         lat: localEvent.lat,
         color: localEvent.getStatus().color
       })
+      // On lui attache une popup
       .setPopup(this.#newPopup(localEvent))
+    // Lorsque la souris survole l'élement du markeur
     marker.getElement().addEventListener('mouseenter', () => {
       this.#onMarkerMouseEnter(marker, localEvent)
     })
+    // Lorsque la souris ne survole plus l'élement du markeur
     marker.getElement().addEventListener('mouseleave', () => {
-      this.#onMarkerMouseLeave(localEvent)
+      this.onMarkerMouseLeave(localEvent)
     })
     return marker
   }
 
   #newPopup(localEvent) {
+    // Création de la popup
     const popup = this.map
       .newPopup({
         maxWidth: '400px'
       })
       .setHTML(this.#getPopupHTML(localEvent, true))
+      // Supprimer tout les popups de survole
+      // lorsque la popup actuelle est ouverte
     popup.on('open', () => this.#popups.clear())
     return popup
   }
@@ -110,16 +133,10 @@ export default class Viewport {
     const formatedEnd = Helper.dateTimeFormat(localEvent.end)
     const color = localEvent.getStatus().color
     const message = localEvent.getStatus().message
-    let detail = ''
-    if (description) {
-      detail = `
-<p style="color: ${color}">${message}</p>
-<p>${localEvent.description}</p>
-      `
-    }
     return `
 <h2>${localEvent.title}</h2>
-${detail}
+<p style="color: ${color}">${message}</p>
+<p>${description ? localEvent.description : ''}</p>
 </p>
   Du <time datatime="${localEvent.start}">${formatedStart}</time>
   ou <time datatime="${localEvent.end}">${formatedEnd}</time>

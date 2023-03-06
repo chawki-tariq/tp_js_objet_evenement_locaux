@@ -25,10 +25,14 @@ export default class Form {
 
   onSubmit(e) {
     e.preventDefault()
+
     const data = new FormData(this.element)
 
+    // Suppression des anciens erreurx
     this.feedback.clear()
 
+    // Parcourir chaque champs avec son nom et valeur
+    // pour la validation
     for (const [key, value] of data.entries()) {
       const field = this.element.elements.namedItem(key)
 

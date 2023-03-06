@@ -6,14 +6,23 @@ export default class Map extends mapboxgl.Map {
     super(options)
   }
 
+  /**
+   * Créer un nouveau markeur attaché la map actuelle
+   */
   newMarker(options = {}) {
     return new mapboxgl.Marker(options).setLngLat(options).addTo(this)
   }
 
+  /**
+   * Créer une nouveau popup
+   */
   newPopup(options = {}) {
     return new mapboxgl.Popup(options)
   }
 
+  /**
+   * Vole dans la map jusqu'au coordonnées
+   */
   flyTo(options) {
     super.flyTo({
       essential: true,

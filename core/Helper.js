@@ -5,6 +5,7 @@ export default class Helper {
   })
 
   static #relativeTimeFormat = new Intl.RelativeTimeFormat(process.env.LOCALE, {
+    numeric: 'auto',
     style: 'long'
   })
 
