@@ -36,11 +36,15 @@ export default class LocalEvent extends Entity {
     }
 
     if (day >= 0 && day <= 3) {
-      const hours = this.start.getSeconds() / 3600
+      const hours = this.start.getHours()
+      let message = `Attention, commence ${Helper.relativeTimeFormat(day, 'day')}
+      ${Helper.relativeTimeFormat(hours, 'hour')}`
+      if (now >= this.start.getTime() && now < this.end.getTime()) {
+        message = 'Evenement en cours'
+      }
       return {
         color: LocalEventStatusColor.ORANGE,
-        message: `Attention, commence ${Helper.relativeTimeFormat(day, 'day')} à
-                  ${Helper.relativeTimeFormat(hours, 'hour')}`
+        message
       }
     }
 

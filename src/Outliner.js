@@ -1,4 +1,4 @@
-import { EventLikeType } from '../core/constants'
+import { EventLikeType, LocalEventStatusColor } from '../core/constants'
 import Removable from '../core/Removable'
 import LocalEvent from './Entity/LocalEvent'
 
@@ -25,16 +25,13 @@ export default class Outliner {
   }
 
   #onStateChange() {
-    let title = `${this.app.localEventState.get().length} Evenement`
-    if (!this.app.localEventState.get().length) {
-      title = 'Aucun Evenement'
-    }
-    this.element.innerHTML = `
-      <h1>${title}</h1>
-    `
+    this.#beforeRender()
     const localEvents = this.app.localEventState
       .get()
-      .sort((a, b) => a.createdAt < b.createdAt)
+      .sort(
+        (a, b) =>
+          new LocalEvent(a).getStatus().color !== LocalEventStatusColor.ORANGE
+      )
     this.items.clear()
     const fragment = document.createDocumentFragment()
     for (const data of localEvents) {
@@ -74,7 +71,6 @@ export default class Outliner {
 
   #newItem(localEvent) {
     const color = localEvent.getStatus().color
-    const message = localEvent.getStatus().message
     const item = document.createElement('div')
     item.classList.add('outliner-item')
     item.dataset.id = localEvent.id
@@ -85,8 +81,8 @@ export default class Outliner {
         '<button class="btn btn small" data-action="cancel">Annuler</button>'
     }
     item.innerHTML = `
+    <div style="background-color: ${color}" class="outliner-item-status"></div>
     <h2 class="outliner-item-title">${localEvent.title}</h2>
-    <p style="color: ${color}">${message}</p>
     <div class="outliner-item-actions">
       ${button}
       <button class="btn btn-danger small" data-action="delete">Supprimer</button>
@@ -94,6 +90,17 @@ export default class Outliner {
     `
     item.addEventListener('click', (e) => this.#onItemClick(e, localEvent))
     return item
+  }
+
+  #beforeRender() {
+    let title = `${this.app.localEventState.get().length} Evenement`
+    if (!this.app.localEventState.get().length) {
+      title = 'Aucun Evenement'
+    }
+    this.element.innerHTML = `
+      <h1>${title}</h1>
+      <button class="btn btn-danger">Tout supprimer</button>
+    `
   }
 
   #render() {

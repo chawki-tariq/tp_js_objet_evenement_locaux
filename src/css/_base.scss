@@ -5,6 +5,7 @@ html, body {
   font-family: var(--family-sans-serif);
   background-color: var(--primary);
   color: var(--white);
+  overflow: hidden;
 }
 
 a {
