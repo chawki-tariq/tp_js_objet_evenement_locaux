@@ -30,7 +30,7 @@ export default class Viewport {
   }
 
   start() {
-    this.map.on('load', this.#onMapLoad.bind(this))
+    this.map.on('load', () => this.app.localEventState.set((state) => state))
 
     document.addEventListener(
       EventLikeType.STATE_CHANGE,
@@ -38,10 +38,6 @@ export default class Viewport {
     )
 
     this.#render()
-  }
-
-  #onMapLoad() {
-    this.app.localEventState.set((state) => state)
   }
 
   #onStateChange({ detail }) {
@@ -55,6 +51,10 @@ export default class Viewport {
   }
 
   #onMarkerMouseEnter(marker, localEvent) {
+    this.app.outliner.items
+      .getAll()
+      .find((item) => item.dataset.id === localEvent.id)
+      .classList.add('active')
     if (marker.getPopup().isOpen()) return
     this.#popups.add(
       this.map
@@ -69,8 +69,12 @@ export default class Viewport {
     )
   }
 
-  #onMarkerMouseLeave() {
+  #onMarkerMouseLeave(localEvent) {
     this.#popups.clear()
+    this.app.outliner.items
+      .getAll()
+      .find((item) => item.dataset.id === localEvent.id)
+      .classList.remove('active')
   }
 
   #newMarker(localEvent) {
@@ -86,7 +90,7 @@ export default class Viewport {
       this.#onMarkerMouseEnter(marker, localEvent)
     })
     marker.getElement().addEventListener('mouseleave', () => {
-      this.#onMarkerMouseLeave()
+      this.#onMarkerMouseLeave(localEvent)
     })
     return marker
   }
@@ -106,10 +110,16 @@ export default class Viewport {
     const formatedEnd = Helper.dateTimeFormat(localEvent.end)
     const color = localEvent.getStatus().color
     const message = localEvent.getStatus().message
+    let detail = ''
+    if (description) {
+      detail = `
+<p style="color: ${color}">${message}</p>
+<p>${localEvent.description}</p>
+      `
+    }
     return `
 <h2>${localEvent.title}</h2>
-<p style="color: ${color}">${message}</p>
-<p>${description ? localEvent.description : ''}</p>
+${detail}
 </p>
   Du <time datatime="${localEvent.start}">${formatedStart}</time>
   ou <time datatime="${localEvent.end}">${formatedEnd}</time>

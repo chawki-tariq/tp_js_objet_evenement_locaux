@@ -14,8 +14,13 @@ export default class Form {
 
   start() {
     this.element.addEventListener('submit', this.onSubmit.bind(this))
+    this.element.addEventListener('reset', this.onReset.bind(this))
 
     this.#render()
+  }
+
+  onReset() {
+    this.feedback.clear()
   }
 
   onSubmit(e) {

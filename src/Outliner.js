@@ -7,17 +7,15 @@ export default class Outliner {
 
   element = {}
 
-  #removables = []
+  items = []
 
   constructor(app) {
     this.app = app
     this.element = document.createElement('aside')
-    this.#removables = new Removable()
+    this.items = new Removable()
   }
 
   start() {
-    this.app.localEventState.set((state) => state)
-
     document.addEventListener(
       EventLikeType.STATE_CHANGE,
       this.#onStateChange.bind(this)
@@ -37,12 +35,12 @@ export default class Outliner {
     const localEvents = this.app.localEventState
       .get()
       .sort((a, b) => a.createdAt < b.createdAt)
-    this.#removables.clear()
+    this.items.clear()
     const fragment = document.createDocumentFragment()
     for (const data of localEvents) {
       const localEvent = new LocalEvent(data)
-      this.#removables.add(this.#newItem(localEvent))
-      fragment.append(...this.#removables.getAll())
+      this.items.add(this.#newItem(localEvent))
+      fragment.append(...this.items.getAll())
     }
     this.element.appendChild(fragment)
   }
@@ -52,7 +50,7 @@ export default class Outliner {
     const action = e.target.dataset.action
     switch (action) {
       case 'edit':
-        if (Object.keys(this.app.editable.get()).length) return
+        // if (Object.keys(this.app.editable.get()).length) return
         this.app.editable.set(() => localEvent)
         break
       case 'cancel':
@@ -79,6 +77,7 @@ export default class Outliner {
     const message = localEvent.getStatus().message
     const item = document.createElement('div')
     item.classList.add('outliner-item')
+    item.dataset.id = localEvent.id
     let button =
       '<button class="btn btn-primary small" data-action="edit">Modifier</button>'
     if (this.app.editable.get()?.id === localEvent.id) {

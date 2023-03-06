@@ -16,8 +16,9 @@
   cursor: pointer;
 }
 
-.outliner-item:hover {
-  box-shadow: var(--shadow);
+.outliner-item:hover,
+.outliner-item.active {
+  box-shadow: var(--active-shadow);
 }
 
 .outliner-item > *:not(:last-child) {
