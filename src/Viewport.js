@@ -29,7 +29,7 @@ export default class Viewport {
   }
 
   start() {
-    this.map.on('load', () => this.app.localEventState.set((state) => state))
+    this.map.on('load', this.#onMapLoad.bind(this))
 
     document.addEventListener(
       EventLikeType.STATE_CHANGE,
@@ -37,6 +37,11 @@ export default class Viewport {
     )
 
     this.#render()
+  }
+
+  #onMapLoad() {
+    this.app.localEventState.set((state) => state)
+    this.map.resize()
   }
 
   #onStateChange({ detail }) {
@@ -122,8 +127,8 @@ export default class Viewport {
         maxWidth: '400px'
       })
       .setHTML(this.#getPopupHTML(localEvent, true))
-      // Supprimer tout les popups de survole
-      // lorsque la popup actuelle est ouverte
+    // Supprimer tout les popups de survole
+    // lorsque la popup actuelle est ouverte
     popup.on('open', () => this.#popups.clear())
     return popup
   }

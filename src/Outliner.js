@@ -56,10 +56,12 @@ export default class Outliner {
         this.app.editable.set(() => localEvent)
         break
       case 'cancel':
+        // Si on est pas déjà en mode édition ne rien faire
         if (!Object.keys(this.app.editable.get()).length) return
         this.app.editable.set(() => ({}))
         break
       case 'delete':
+        // Si on est en mode édition ne rien faire
         if (Object.keys(this.app.editable.get()).length) return
         if (!confirm('Voulez-vous vraiment supprimer ?')) return
         this.app.localEventState.set((state) =>
@@ -67,6 +69,7 @@ export default class Outliner {
         )
         break
       default:
+        // Déplacer la caméra jusqu'au coordonnées géographique
         this.app.viewport.map.flyTo({
           center: [localEvent.lng, localEvent.lat]
         })
@@ -81,6 +84,7 @@ export default class Outliner {
     item.dataset.id = localEvent.id
     let button =
       '<button class="btn btn-primary small" data-action="edit">Modifier</button>'
+      // Si on est en mode édition et que l'évenement editer est le bon
     if (this.app.editable.get()?.id === localEvent.id) {
       button =
         '<button class="btn btn small" data-action="cancel">Annuler</button>'
@@ -95,16 +99,20 @@ export default class Outliner {
     `
     item.addEventListener('click', (e) => this.#onItemClick(e, localEvent))
     item.addEventListener('mouseenter', (e) =>
+    // Afficher la popup associé au marker correspondant à cette item
       this.app.viewport.newHoverPopup(localEvent)
     )
     item.addEventListener('mouseleave', (e) =>
+    // Cacher la popup associé au marker correspondant à cette item
       this.app.viewport.onMarkerMouseLeave(localEvent)
     )
     return item
   }
 
   #beforeRender() {
+    // Afficher le nombre d'évenement créer
     let title = `${this.app.localEventState.get().length} Evenement`
+    // Si il n'y a aucun évenement
     if (!this.app.localEventState.get().length) {
       title = 'Aucun Evenement'
     }
