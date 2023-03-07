@@ -24,6 +24,20 @@ export default class Outliner {
     this.#render()
   }
 
+  activeItem(localEvent) {
+    this.items
+      .getAll()
+      .find((item) => item.dataset.id === localEvent.id)
+      .classList.add('active')
+  }
+
+  deactiveItem(localEvent) {
+    this.items
+      .getAll()
+      .find((item) => item.dataset.id === localEvent.id)
+      .classList.remove('active')
+  }
+
   #onStateChange() {
     this.#beforeRender()
     // Récupération des évenements qu'ont trie
@@ -34,7 +48,7 @@ export default class Outliner {
         (a) =>
           new LocalEvent(a).getStatus().color !== LocalEventStatusColor.ORANGE
       )
-      // Suppression des anciens items
+    // Suppression des anciens items
     this.items.clear()
     const fragment = document.createDocumentFragment()
     // Création d'un item pour chaque évenement
@@ -42,7 +56,7 @@ export default class Outliner {
       const localEvent = new LocalEvent(data)
       this.items.add(this.#newItem(localEvent))
     }
-    // On ajoute au fragment tout les item 
+    // On ajoute au fragment tout les item
     fragment.append(...this.items.getAll())
     this.element.appendChild(fragment)
   }
@@ -84,7 +98,7 @@ export default class Outliner {
     item.dataset.id = localEvent.id
     let button =
       '<button class="btn btn-primary small" data-action="edit">Modifier</button>'
-      // Si on est en mode édition et que l'évenement editer est le bon
+    // Si on est en mode édition et que l'évenement editer est le bon
     if (this.app.editable.get()?.id === localEvent.id) {
       button =
         '<button class="btn btn small" data-action="cancel">Annuler</button>'
@@ -99,11 +113,11 @@ export default class Outliner {
     `
     item.addEventListener('click', (e) => this.#onItemClick(e, localEvent))
     item.addEventListener('mouseenter', (e) =>
-    // Afficher la popup associé au marker correspondant à cette item
+      // Afficher la popup associé au marker correspondant à cette item
       this.app.viewport.newHoverPopup(localEvent)
     )
     item.addEventListener('mouseleave', (e) =>
-    // Cacher la popup associé au marker correspondant à cette item
+      // Cacher la popup associé au marker correspondant à cette item
       this.app.viewport.onMarkerMouseLeave(localEvent)
     )
     return item

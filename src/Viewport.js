@@ -62,10 +62,7 @@ export default class Viewport {
     // On met en surbrillance l'élement
     // dans le outliner qui correspond
     // ou markeur actuelle
-    this.app.outliner.items
-      .getAll()
-      .find((item) => item.dataset.id === localEvent.id)
-      .classList.add('active')
+    this.app.outliner.activeItem(localEvent)
     if (marker.getPopup().isOpen()) return
     // Création d'une popup lorsque
     // le markeur est survolé
@@ -92,10 +89,7 @@ export default class Viewport {
     this.#popups.clear()
     // On désactive la surbrillance de l'élement
     // dans le outliner correspondant au markeur actuelle
-    this.app.outliner.items
-      .getAll()
-      .find((item) => item.dataset.id === localEvent.id)
-      .classList.remove('active')
+    this.app.outliner.deactiveItem(localEvent)
   }
 
   #newMarker(localEvent) {
