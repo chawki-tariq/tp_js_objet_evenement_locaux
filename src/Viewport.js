@@ -16,9 +16,12 @@ export default class Viewport {
   constructor(app) {
     this.map = new Map({
       container: document.createElement('div'),
-      style: 'https://demotiles.maplibre.org/style.json',
-      center: [2, 47],
-      zoom: 4,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      // center: [2.6, 42.6978],
+      maxBounds: [[2.6, 42.6978], [2.6, 43.3]],
+      minZoom: 9,
+      maxZoom: 9,
+      zoom: 7,
       doubleClickZoom: false,
       dragRotate: false
     })
