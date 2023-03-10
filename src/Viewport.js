@@ -17,7 +17,6 @@ export default class Viewport {
     this.map = new Map({
       container: document.createElement('div'),
       style: 'mapbox://styles/mapbox/streets-v12',
-      // center: [2.6, 42.6978],
       maxBounds: [[2.6, 42.6978], [2.6, 43.3]],
       minZoom: 9,
       maxZoom: 9,
@@ -52,6 +51,7 @@ export default class Viewport {
     const localEvents = this.app.localEventState.get()
     // On supprime les anciens markeurs
     this.#markers.clear()
+    this.#popups.clear()
     // Création d'un nouveau markeur
     // pour chaque évenement
     for (const data of localEvents) {
