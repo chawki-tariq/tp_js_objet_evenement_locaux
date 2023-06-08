@@ -17,9 +17,9 @@ export default class Viewport {
     this.map = new Map({
       container: document.createElement('div'),
       style: 'mapbox://styles/mapbox/streets-v12',
-      maxBounds: [[2.6, 42.6978], [2.6, 43.3]],
-      minZoom: 9,
-      maxZoom: 9,
+      center: [2.17403, 41.40338],
+      minZoom: 5,
+      maxZoom: 6,
       zoom: 7,
       doubleClickZoom: false,
       dragRotate: false
