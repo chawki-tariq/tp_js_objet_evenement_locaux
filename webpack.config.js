@@ -14,7 +14,7 @@ module.exports = {
       template: './index.html'
     }),
     new Dotenv({
-      systemvars: true
+      systemVars: true
     })
   ],
   output: {
